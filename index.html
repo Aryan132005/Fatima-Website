@@ -1,0 +1,1750 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CARE TO VOICE - Fatima Y. Abreu Arellano</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Alex+Brush&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-bg': '#e6e2dd',
+                        'brand-bg-light': '#f5f3f0',
+                        'brand-dark': '#1c1c1c',
+                        'brand-olive': '#5c6838',
+                        'brand-olive-hover': '#4a552b',
+                        'brand-gold': '#e8c56d',
+                        'brand-gold-hover': '#d9b457',
+                        'brand-tan': '#d6cdc4',
+                        'brand-card-tan': '#ece7e1',
+                        'brand-card-green': '#dce3d5',
+                        'brand-card-gold': '#f9f3dd',
+                        brand: {
+                            50: '#fcfbf9',
+                            100: '#f4efe6',
+                            200: '#e6d8c5',
+                            300: '#d5bd9f',
+                            400: '#c29d77',
+                            500: '#b18256',
+                            600: '#9b6b44',
+                            700: '#7f5338',
+                            800: '#684331',
+                            900: '#55372b',
+                        },
+                        darkbg: {
+                            base: '#0d0e12',
+                            card: 'rgba(20, 22, 28, 0.82)',
+                            border: 'rgba(255, 255, 255, 0.1)'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'Georgia', 'serif'],
+                        script: ['"Alex Brush"', 'cursive'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* CONTINUOUS B&W FLOATING BUBBLE LIVE WALLPAPER CANVAS */
+        #bubble-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* SCROLL PROGRESS BAR */
+        #scroll-progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #5c6838, #e8c56d, #b18256);
+            z-index: 100;
+            transition: width 0.1s ease-out;
+            width: 0%;
+        }
+
+        /* GLASSMORPHISM PANELS WITH TRANSPARENCY FOR BUBBLE WALLPAPER */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .dark .glass-panel {
+            background: rgba(18, 20, 26, 0.82);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* SCROLL REVEAL ANIMATIONS */
+        .reveal-item {
+            opacity: 0;
+            will-change: transform, opacity;
+            transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal-left { transform: translateX(-65px); }
+        .reveal-right { transform: translateX(65px); }
+        .reveal-up { transform: translateY(45px); }
+        .reveal-zoom { transform: scale(0.92); }
+
+        .reveal-item.revealed {
+            opacity: 1 !important;
+            transform: translate(0, 0) scale(1) !important;
+        }
+
+        /* HOVER ELEVATION & GLOW EFFECTS */
+        .hover-lift {
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.3s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-7px) scale(1.015);
+            box-shadow: 0 20px 35px -10px rgba(92, 104, 56, 0.2);
+        }
+
+        .btn-shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-shimmer::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 40%;
+            height: 200%;
+            background: linear-gradient(60deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transform: rotate(25deg);
+            transition: all 0.65s ease;
+        }
+        .btn-shimmer:hover::after {
+            left: 120%;
+        }
+
+        /* PAGE SECTIONS */
+        .page-section {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.4s ease-in-out;
+        }
+        .page-section.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #b18256; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb { background: #684331; }
+    
+        /* TYPING EFFECT & CURSOR SPOTLIGHT */
+        .typing-text::after {
+            content: '|';
+            animation: blink 0.8s infinite;
+            color: #b18256;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* BACK TO TOP BUTTON */
+        #back-to-top {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 40;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+        #back-to-top.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* ACCORDION ANIMATION */
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
+        }
+        .faq-item.open .faq-answer {
+            max-height: 500px;
+            transition: max-height 0.4s cubic-bezier(1, 0, 1, 0);
+        }
+        .faq-item.open .faq-icon {
+            transform: rotate(180deg);
+        }
+
+        /* PULSE DOT */
+        .pulse-dot {
+            box-shadow: 0 0 0 0 rgba(92, 104, 56, 0.7);
+            animation: pulse-ring 1.8s infinite;
+        }
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(92, 104, 56, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(92, 104, 56, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(92, 104, 56, 0); }
+        }
+
+    </style>
+</head>
+
+<body class="bg-stone-50 dark:bg-darkbg-base text-stone-800 dark:text-stone-100 font-sans antialiased min-h-screen flex flex-col relative transition-colors duration-500">
+
+    <!-- TOP SCROLL PROGRESS BAR -->
+    <div id="scroll-progress-bar"></div>
+
+    <!-- CONTINUOUS B&W FLOATING BUBBLE LIVE WALLPAPER CANVAS -->
+    <canvas id="bubble-canvas"></canvas>
+
+    <!-- CONTENT LAYER -->
+    <div class="relative z-10 flex flex-col min-h-screen">
+
+        <!-- HEADER & NAVIGATION -->
+        <header class="sticky top-0 z-40 glass-panel shadow-sm border-b border-stone-200/60 dark:border-stone-800/80">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-24">
+                    
+                    <!-- Logo -->
+                    <a href="#" onclick="navigateTo('home'); return false;" class="flex items-center gap-3 group focus:outline-none">
+                        <div class="w-12 h-12 relative flex items-center justify-center">
+                            <svg viewBox="0 0 100 100" class="w-12 h-12 text-stone-900 dark:text-brand-300 group-hover:scale-105 transition-transform duration-200">
+                                <path d="M50,88 C50,88 12,62 12,35 C12,20 23,10 37,10 C45,10 50,16 50,16 C50,16 55,10 63,10 C77,10 88,20 88,35 C88,62 50,88 50,88 Z" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M48,26 C43,26 38,30 38,37 C38,42 42,46 45,49 C48,52 50,58 48,64 C47,67 43,72 38,72" fill="none" stroke="#e8c56d" stroke-width="6" stroke-linecap="round" />
+                                <circle cx="62" cy="38" r="3" fill="#e8c56d" />
+                                <path d="M66,32 Q72,38 66,44" fill="none" stroke="#e8c56d" stroke-width="4" stroke-linecap="round" />
+                            </svg>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="font-serif text-lg tracking-widest font-bold uppercase text-stone-900 dark:text-white leading-tight">CARE TO VOICE</span>
+                            <span class="text-[9px] tracking-[0.25em] font-medium text-brand-700 dark:text-brand-400 uppercase">Voice. Lead. Thrive.</span>
+                        </div>
+                    </a>
+
+                    <!-- Navigation Links -->
+                    <nav class="hidden lg:flex items-center space-x-1 border border-stone-200 dark:border-stone-800 rounded-xl p-1.5 text-xs tracking-wider uppercase font-medium glass-panel">
+                        <button onclick="navigateTo('home')" class="nav-btn px-3.5 py-2 rounded-lg transition" data-target="home">Home</button>
+                        <button onclick="navigateTo('about')" class="nav-btn px-3.5 py-2 rounded-lg transition" data-target="about">About</button>
+                        <button onclick="navigateTo('consulting')" class="nav-btn px-3.5 py-2 rounded-lg transition" data-target="consulting">Consulting</button>
+                        <button onclick="navigateTo('coaching')" class="nav-btn px-3.5 py-2 rounded-lg transition" data-target="coaching">Coaching</button>
+                        <button onclick="navigateTo('publications')" class="nav-btn px-3.5 py-2 rounded-lg transition" data-target="publications">Publications</button>
+                        <button onclick="navigateTo('contact')" class="nav-btn px-3.5 py-2 rounded-lg transition" data-target="contact">Contact</button>
+                        <button onclick="navigateTo('shop')" class="nav-btn px-3.5 py-2 rounded-lg transition" data-target="shop">
+                            <i class="fa-solid fa-store mr-1"></i> Shop
+                        </button>
+                    </nav>
+
+                    <!-- Header Utility Bar -->
+                    <div class="flex items-center space-x-3">
+                        <!-- Theme Toggle Button -->
+                        <button id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle theme mode" class="p-2.5 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-800 dark:text-amber-300 hover:scale-105 active:scale-95 transition border border-stone-200 dark:border-stone-700 shadow-sm">
+                            <i id="theme-toggle-icon" class="fa-solid fa-moon text-lg"></i>
+                        </button>
+
+                        <!-- Cart Button -->
+                        <button onclick="openCartModal()" class="relative p-2.5 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-800 dark:text-stone-200 hover:text-brand-700 transition border border-stone-200 dark:border-stone-700 shadow-sm">
+                            <i class="fa-solid fa-bag-shopping text-lg"></i>
+                            <span id="cart-badge" class="absolute -top-1.5 -right-1.5 bg-brand-700 text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center hidden shadow-md">0</span>
+                        </button>
+
+                        <button onclick="navigateTo('contact')" class="hidden sm:inline-block bg-brand-700 hover:bg-brand-800 dark:bg-brand-600 dark:hover:bg-brand-500 text-white px-5 py-2.5 rounded-xl text-xs uppercase font-semibold tracking-wider shadow-md transition transform hover:-translate-y-0.5 btn-shimmer">
+                            Book Clarity Call
+                        </button>
+
+                        <button onclick="toggleMobileMenu()" class="lg:hidden p-2.5 text-stone-800 dark:text-stone-200 rounded-xl focus:outline-none">
+                            <i class="fa-solid fa-bars text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Drawer -->
+            <div id="mobile-menu" class="hidden lg:hidden glass-panel border-b border-stone-200 dark:border-stone-800 px-4 pt-3 pb-6 space-y-2 text-xs uppercase tracking-wider font-semibold">
+                <button onclick="navigateTo('home'); toggleMobileMenu();" class="block w-full text-left px-4 py-2.5 rounded-xl text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800">Home</button>
+                <button onclick="navigateTo('about'); toggleMobileMenu();" class="block w-full text-left px-4 py-2.5 rounded-xl text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800">About</button>
+                <button onclick="navigateTo('consulting'); toggleMobileMenu();" class="block w-full text-left px-4 py-2.5 rounded-xl text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800">Consulting</button>
+                <button onclick="navigateTo('coaching'); toggleMobileMenu();" class="block w-full text-left px-4 py-2.5 rounded-xl text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800">Coaching</button>
+                <button onclick="navigateTo('publications'); toggleMobileMenu();" class="block w-full text-left px-4 py-2.5 rounded-xl text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800">Publications</button>
+                <button onclick="navigateTo('shop'); toggleMobileMenu();" class="block w-full text-left px-4 py-2.5 rounded-xl text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800">Shop</button>
+                <button onclick="navigateTo('contact'); toggleMobileMenu();" class="block w-full text-left px-4 py-2.5 rounded-xl text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800">Contact</button>
+            </div>
+        </header>
+
+        <main class="flex-grow">
+
+            <!-- ================= PAGE: HOME ================= -->
+            <section id="home" class="page-section active">
+                <!-- Hero Banner -->
+                <div class="py-16 md:py-24 border-b border-stone-200/60 dark:border-stone-800">
+                    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                            <div class="space-y-6 text-center md:text-left reveal-item reveal-left">
+                                <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-brand-100 dark:bg-stone-800 text-brand-800 dark:text-brand-300 rounded-full text-xs font-semibold uppercase tracking-wider border border-brand-200 dark:border-stone-700 shadow-sm mb-3">
+                                    <i class="fa-solid fa-sparkles text-amber-600"></i> <span id="hero-typing" class="typing-text font-bold">Executive Advisory</span>
+                                </div>
+                                <h1 class="font-serif text-3xl md:text-4xl lg:text-5xl leading-tight text-stone-900 dark:text-white font-normal">
+                                    Helping professionals find clearer direction and supporting organisations as they navigate workforce change and evolving expectations.
+                                </h1>
+                                <div class="pt-4">
+                                    <button onclick="navigateTo('contact')" class="inline-block bg-white text-stone-900 dark:bg-stone-800 dark:text-white border border-stone-900 dark:border-stone-700 hover:bg-stone-900 hover:text-white text-xs font-semibold uppercase tracking-widest px-8 py-3.5 rounded-xl transition-all duration-200 shadow-sm hover-lift btn-shimmer">
+                                        Book a Clarity Call &gt;
+                                    </button>
+                                </div>
+                                <div class="pt-4">
+                                    <p class="font-script text-3xl sm:text-4xl text-stone-700 dark:text-brand-300 transform -rotate-2">Fatima Y. Abreu Arellano</p>
+                                </div>
+                            </div>
+                            <div class="flex justify-center reveal-item reveal-right">
+                                <div class="relative w-full max-w-md aspect-[4/5] overflow-hidden shadow-2xl rounded-3xl border-4 border-white/80 dark:border-stone-800 glass-panel hover-lift">
+                                    <img src="assets/fatima_portrait.jpg" alt="Fatima Y. Abreu Arellano" class="w-full h-full object-cover object-top" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <!-- Live Animated Stats Counter -->
+                <div class="py-12 border-b border-stone-200/60 dark:border-stone-800">
+                    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                            <div class="glass-panel p-6 rounded-2xl border border-stone-200 dark:border-stone-800 hover-lift reveal-item reveal-up">
+                                <p class="font-serif text-3xl sm:text-4xl font-bold text-brand-700 dark:text-brand-300"><span class="counter" data-target="15">0</span>+</p>
+                                <p class="text-xs text-stone-600 dark:text-stone-400 mt-1 font-semibold uppercase tracking-wider">Years Corporate Experience</p>
+                            </div>
+                            <div class="glass-panel p-6 rounded-2xl border border-stone-200 dark:border-stone-800 hover-lift reveal-item reveal-up">
+                                <p class="font-serif text-3xl sm:text-4xl font-bold text-brand-700 dark:text-brand-300"><span class="counter" data-target="500">0</span>+</p>
+                                <p class="text-xs text-stone-600 dark:text-stone-400 mt-1 font-semibold uppercase tracking-wider">Leaders Mentored</p>
+                            </div>
+                            <div class="glass-panel p-6 rounded-2xl border border-stone-200 dark:border-stone-800 hover-lift reveal-item reveal-up">
+                                <p class="font-serif text-3xl sm:text-4xl font-bold text-brand-700 dark:text-brand-300"><span class="counter" data-target="50">0</span>+</p>
+                                <p class="text-xs text-stone-600 dark:text-stone-400 mt-1 font-semibold uppercase tracking-wider">Organisations Supported</p>
+                            </div>
+                            <div class="glass-panel p-6 rounded-2xl border border-stone-200 dark:border-stone-800 hover-lift reveal-item reveal-up">
+                                <p class="font-serif text-3xl sm:text-4xl font-bold text-brand-700 dark:text-brand-300"><span class="counter" data-target="98">0</span>%</p>
+                                <p class="text-xs text-stone-600 dark:text-stone-400 mt-1 font-semibold uppercase tracking-wider">Client Satisfaction Rate</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- The Choose Direction Process Section -->
+                <div class="py-20 border-b border-stone-200/60 dark:border-stone-800">
+                    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+                            <div class="md:col-span-5 space-y-6 reveal-item reveal-left">
+                                <h2 class="font-serif text-2xl sm:text-3xl font-medium leading-snug text-stone-900 dark:text-white">
+                                    You're capable.<br>
+                                    You've achieved a lot.<br>
+                                    But something feels misaligned.<br>
+                                    <span class="italic font-normal text-brand-700 dark:text-brand-300">It's time for future career clarity.</span>
+                                </h2>
+                                <p class="text-sm text-stone-600 dark:text-stone-300 leading-relaxed">
+                                    For professionals ready to define what comes next, in a world of evolving jobs, uncertainty and AI.
+                                </p>
+                            </div>
+                            <div class="md:col-span-7 glass-panel p-8 rounded-3xl border border-stone-200 dark:border-stone-800 reveal-item reveal-right hover-lift">
+                                <div class="text-center mb-8">
+                                    <span class="text-xs tracking-widest uppercase font-bold text-stone-800 dark:text-stone-200 border-b border-stone-400 pb-1">The Choose Direction™ Process</span>
+                                </div>
+
+                                <div class="space-y-4">
+                                    <div class="glass-panel p-4 rounded-2xl border border-amber-100/80 dark:border-stone-700 flex items-center gap-4 hover-lift reveal-item reveal-up">
+                                        <div class="w-8 h-8 rounded-full bg-amber-100 dark:bg-stone-800 text-amber-900 dark:text-amber-300 flex items-center justify-center font-bold text-sm shrink-0">1</div>
+                                        <div class="flex-1">
+                                            <h4 class="font-bold text-sm text-stone-900 dark:text-white">Where You Are Now</h4>
+                                            <p class="text-xs text-stone-600 dark:text-stone-400">Understand what's keeping you stuck.</p>
+                                        </div>
+                                        <i class="fa-solid fa-brain text-amber-700/70 text-lg"></i>
+                                    </div>
+
+                                    <div class="glass-panel p-4 rounded-2xl border border-amber-200/80 dark:border-stone-700 flex items-center gap-4 shadow-sm hover-lift reveal-item reveal-up">
+                                        <div class="w-8 h-8 rounded-full bg-brand-olive text-white flex items-center justify-center font-bold text-sm shrink-0">2</div>
+                                        <div class="flex-1">
+                                            <h4 class="font-bold text-sm text-stone-900 dark:text-white">The Choose Direction Process</h4>
+                                            <p class="text-xs text-stone-600 dark:text-stone-400">Gain clarity. Make aligned decisions. Create a practical 90-day action plan.</p>
+                                        </div>
+                                        <i class="fa-solid fa-compass text-brand-olive text-lg"></i>
+                                    </div>
+
+                                    <div class="glass-panel p-4 rounded-2xl border border-amber-100/80 dark:border-stone-700 flex items-center gap-4 hover-lift reveal-item reveal-up">
+                                        <div class="w-8 h-8 rounded-full bg-stone-200 dark:bg-stone-800 text-stone-800 dark:text-stone-200 flex items-center justify-center font-bold text-sm shrink-0">3</div>
+                                        <div class="flex-1">
+                                            <h4 class="font-bold text-sm text-stone-900 dark:text-white">Where You Get To</h4>
+                                            <ul class="text-xs text-stone-600 dark:text-stone-400 flex flex-wrap gap-x-3 gap-y-1 mt-1">
+                                                <li>✓ Clear direction</li>
+                                                <li>✓ Confident action</li>
+                                                <li>✓ Purposeful progress</li>
+                                            </ul>
+                                        </div>
+                                        <i class="fa-solid fa-mountain text-emerald-700/70 text-lg"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-12">
+                            <button onclick="navigateTo('coaching')" class="bg-stone-400 hover:bg-stone-500 text-white text-xs tracking-widest uppercase font-semibold px-6 py-3 rounded-xl transition-all shadow-md btn-shimmer hover-lift reveal-item reveal-up">
+                                Explore Programs &gt;
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Book a Clarity Call & 3 Service Boxes Section -->
+                <div class="py-20 border-b border-stone-200/60 dark:border-stone-800">
+                    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch">
+                            <!-- Left Book a Clarity Call Box -->
+                            <div class="md:col-span-5 glass-panel p-8 rounded-3xl border border-stone-200 dark:border-stone-800 flex flex-col justify-between hover-lift reveal-item reveal-left">
+                                <div class="space-y-4">
+                                    <div class="w-16 h-16 rounded-2xl bg-amber-100 dark:bg-stone-800 flex items-center justify-center text-amber-800 dark:text-amber-300 text-3xl">
+                                        <i class="fa-regular fa-calendar-check"></i>
+                                    </div>
+                                    <h3 class="font-serif text-2xl font-bold text-stone-900 dark:text-white uppercase tracking-wider">BOOK A CLARITY CALL</h3>
+                                    <p class="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
+                                        A personalised conversation to help you gain clarity on your next step.
+                                    </p>
+                                </div>
+                                <div class="pt-8">
+                                    <button onclick="navigateTo('contact')" class="bg-brand-700 hover:bg-brand-800 dark:bg-brand-600 text-white text-xs font-semibold uppercase tracking-wider px-6 py-3.5 rounded-xl shadow transition btn-shimmer hover-lift">
+                                        Book a Complimentary Call &gt;
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Right 3 Service Boxes -->
+                            <div class="md:col-span-7 space-y-4 reveal-item reveal-right">
+                                <div class="glass-panel p-6 rounded-2xl border border-stone-200 dark:border-stone-800 flex items-center gap-6 hover-lift">
+                                    <div class="w-14 h-14 rounded-2xl bg-brand-100 dark:bg-stone-800 flex items-center justify-center text-brand-700 dark:text-brand-300 text-2xl shrink-0">
+                                        <i class="fa-solid fa-compass"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-serif font-bold text-base text-stone-900 dark:text-white uppercase">CAREER CLARITY COACHING</h4>
+                                        <p class="text-xs text-stone-600 dark:text-stone-400 mt-1 leading-relaxed">Personalised support to help you articulate a more aligned direction, and navigate lasting change.</p>
+                                    </div>
+                                </div>
+
+                                <div class="glass-panel p-6 rounded-2xl border border-stone-200 dark:border-stone-800 flex items-center gap-6 hover-lift">
+                                    <div class="w-14 h-14 rounded-2xl bg-emerald-100 dark:bg-stone-800 flex items-center justify-center text-emerald-700 dark:text-emerald-300 text-2xl shrink-0">
+                                        <i class="fa-solid fa-users"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-serif font-bold text-base text-stone-900 dark:text-white uppercase">WORKFORCE & LEADERSHIP WORKSHOPS</h4>
+                                        <p class="text-xs text-stone-600 dark:text-stone-400 mt-1 leading-relaxed">Tailored workshops designed to support clarity, change readiness, and professional growth in active organisations.</p>
+                                    </div>
+                                </div>
+
+                                <div class="glass-panel p-6 rounded-2xl border border-stone-200 dark:border-stone-800 flex items-center gap-6 hover-lift">
+                                    <div class="w-14 h-14 rounded-2xl bg-amber-100 dark:bg-stone-800 flex items-center justify-center text-amber-700 dark:text-amber-300 text-2xl shrink-0">
+                                        <i class="fa-solid fa-chart-pie"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-serif font-bold text-base text-stone-900 dark:text-white uppercase">TOTAL REWARDS & WORKFORCE CONSULTING</h4>
+                                        <p class="text-xs text-stone-600 dark:text-stone-400 mt-1 leading-relaxed">Expert advisory and data-driven solutions to align compensation, talent strategy, and organization models...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Let's explore how we can work together Section -->
+                <div class="py-16 border-b border-stone-200/60 dark:border-stone-800 text-center">
+                    <div class="max-w-3xl mx-auto space-y-6 reveal-item reveal-up">
+                        <h2 class="font-serif text-3xl md:text-4xl font-normal text-stone-900 dark:text-white">Let's explore how we can work together.</h2>
+                        <button onclick="navigateTo('contact')" class="bg-stone-400 hover:bg-stone-500 text-white text-xs tracking-widest uppercase font-semibold px-8 py-3 rounded-xl transition-all shadow-md btn-shimmer hover-lift">
+                            CONNECT &gt;
+                        </button>
+                    </div>
+                </div>
+
+                
+                <!-- The CARE Framework 4 Pillars -->
+                <div class="py-20 border-b border-stone-200/60 dark:border-stone-800">
+                    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+                        <div class="text-center max-w-3xl mx-auto space-y-2 reveal-item reveal-up">
+                            <span class="text-brand-700 dark:text-brand-300 font-semibold uppercase tracking-wider text-xs">Proprietary Methodology</span>
+                            <h2 class="font-serif text-3xl sm:text-4xl font-bold text-stone-900 dark:text-white">The CARE™ Framework</h2>
+                            <p class="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">Four essential pillars designed to help professionals and leaders navigate career transformation with intention.</p>
+                        </div>
+
+                        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <!-- Pillar C -->
+                            <div class="glass-panel p-6 rounded-3xl border border-stone-200 dark:border-stone-800 hover-lift reveal-item reveal-up space-y-3">
+                                <div class="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-stone-800 text-amber-800 dark:text-amber-300 font-serif font-bold text-2xl flex items-center justify-center">C</div>
+                                <h3 class="font-serif font-bold text-lg text-stone-900 dark:text-white">Clarity</h3>
+                                <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">Self-awareness, understanding internal tension, and establishing aligned long-term career goals.</p>
+                            </div>
+
+                            <!-- Pillar A -->
+                            <div class="glass-panel p-6 rounded-3xl border border-stone-200 dark:border-stone-800 hover-lift reveal-item reveal-up space-y-3">
+                                <div class="w-12 h-12 rounded-2xl bg-brand-100 dark:bg-stone-800 text-brand-700 dark:text-brand-300 font-serif font-bold text-2xl flex items-center justify-center">A</div>
+                                <h3 class="font-serif font-bold text-lg text-stone-900 dark:text-white">Adaptability</h3>
+                                <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">Navigating AI disruptions, workplace pivots, and changing organizational expectations.</p>
+                            </div>
+
+                            <!-- Pillar R -->
+                            <div class="glass-panel p-6 rounded-3xl border border-stone-200 dark:border-stone-800 hover-lift reveal-item reveal-up space-y-3">
+                                <div class="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-stone-800 text-emerald-800 dark:text-emerald-300 font-serif font-bold text-2xl flex items-center justify-center">R</div>
+                                <h3 class="font-serif font-bold text-lg text-stone-900 dark:text-white">Resilience</h3>
+                                <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">Building emotional strength, setting honest boundaries, and maintaining personal wellbeing.</p>
+                            </div>
+
+                            <!-- Pillar E -->
+                            <div class="glass-panel p-6 rounded-3xl border border-stone-200 dark:border-stone-800 hover-lift reveal-item reveal-up space-y-3">
+                                <div class="w-12 h-12 rounded-2xl bg-stone-200 dark:bg-stone-800 text-stone-800 dark:text-stone-200 font-serif font-bold text-2xl flex items-center justify-center">E</div>
+                                <h3 class="font-serif font-bold text-lg text-stone-900 dark:text-white">Execution</h3>
+                                <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">Crafting practical 90-day action plans, confident communication, and sustained progress.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Rewards & Workforce Consulting Hub Diagram Section -->
+                <div class="py-20 border-b border-stone-200/60 dark:border-stone-800">
+                    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+                            <div class="md:col-span-5 space-y-4 reveal-item reveal-left">
+                                <h2 class="font-serif text-3xl font-medium text-stone-900 dark:text-white">Total Rewards & Workforce Consulting</h2>
+                                <p class="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
+                                    Built on global experience leading Reward, Performance, and Workforce initiatives, I provide strategic support across Total Rewards, workforce strategy, and people practices to help organisations navigate change, evolving workforce expectations, and the impact of AI on the future of work.
+                                </p>
+                                <div class="pt-4">
+                                    <button onclick="navigateTo('consulting')" class="bg-stone-400 hover:bg-stone-500 text-white text-xs tracking-widest uppercase font-semibold px-6 py-3 rounded-xl transition-all shadow-md btn-shimmer hover-lift">
+                                        EXPLORE SERVICES &gt;
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="md:col-span-7 glass-panel p-8 rounded-3xl border border-stone-200 dark:border-stone-800 reveal-item reveal-right hover-lift">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                                    <div class="p-4 glass-panel rounded-2xl border border-stone-200 dark:border-stone-700">
+                                        <div class="font-bold uppercase text-stone-900 dark:text-white mb-1 flex items-center gap-2"><i class="fa-solid fa-sack-dollar text-brand-600"></i> Total Rewards</div>
+                                        <p class="text-stone-600 dark:text-stone-400">Competitive. Equitable. Aligned with value.</p>
+                                    </div>
+                                    <div class="p-4 glass-panel rounded-2xl border border-stone-200 dark:border-stone-700">
+                                        <div class="font-bold uppercase text-stone-900 dark:text-white mb-1 flex items-center gap-2"><i class="fa-solid fa-users text-brand-600"></i> Workforce Strategy</div>
+                                        <p class="text-stone-600 dark:text-stone-400">Workforce planning. Talent strategy. Future readiness.</p>
+                                    </div>
+                                    <div class="p-4 glass-panel rounded-2xl border border-stone-200 dark:border-stone-700">
+                                        <div class="font-bold uppercase text-stone-900 dark:text-white mb-1 flex items-center gap-2"><i class="fa-solid fa-shield-halved text-brand-600"></i> Governance & Compliance</div>
+                                        <p class="text-stone-600 dark:text-stone-400">Policy. Governance. Fair practice.</p>
+                                    </div>
+                                    <div class="p-4 glass-panel rounded-2xl border border-stone-200 dark:border-stone-700">
+                                        <div class="font-bold uppercase text-stone-900 dark:text-white mb-1 flex items-center gap-2"><i class="fa-solid fa-heart text-brand-600"></i> Employee Experience</div>
+                                        <p class="text-stone-600 dark:text-stone-400">Engage. Support. Retain talent.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <!-- Client Testimonials Section -->
+                <div class="py-20 border-b border-stone-200/60 dark:border-stone-800">
+                    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+                        <div class="text-center max-w-3xl mx-auto space-y-2 reveal-item reveal-up">
+                            <span class="text-brand-700 dark:text-brand-300 font-semibold uppercase tracking-wider text-xs">Client Voices</span>
+                            <h2 class="font-serif text-3xl sm:text-4xl font-bold text-stone-900 dark:text-white">What Leaders & Executives Say</h2>
+                        </div>
+
+                        <div class="grid md:grid-cols-3 gap-8">
+                            <div class="glass-panel p-6 rounded-3xl border border-stone-200 dark:border-stone-800 space-y-4 hover-lift reveal-item reveal-up">
+                                <div class="flex text-amber-400 text-xs gap-1">
+                                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                </div>
+                                <p class="text-xs text-stone-600 dark:text-stone-300 italic leading-relaxed">
+                                    "Fatima's Choose Direction framework gave me the exact clarity I needed during an intense corporate transition. Her strategic guidance is unmatched."
+                                </p>
+                                <div class="pt-2 border-t border-stone-200 dark:border-stone-700">
+                                    <p class="font-bold text-xs text-stone-900 dark:text-white">VP of Human Resources</p>
+                                    <p class="text-[10px] text-stone-500 dark:text-stone-400">Global Financial Institution</p>
+                                </div>
+                            </div>
+
+                            <div class="glass-panel p-6 rounded-3xl border border-stone-200 dark:border-stone-800 space-y-4 hover-lift reveal-item reveal-up">
+                                <div class="flex text-amber-400 text-xs gap-1">
+                                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                </div>
+                                <p class="text-xs text-stone-600 dark:text-stone-300 italic leading-relaxed">
+                                    "The Total Rewards audit Fatima conducted transformed how our executive board approaches talent retention. High-impact strategic work!"
+                                </p>
+                                <div class="pt-2 border-t border-stone-200 dark:border-stone-700">
+                                    <p class="font-bold text-xs text-stone-900 dark:text-white">Chief People Officer</p>
+                                    <p class="text-[10px] text-stone-500 dark:text-stone-400">Multinational Tech Firm</p>
+                                </div>
+                            </div>
+
+                            <div class="glass-panel p-6 rounded-3xl border border-stone-200 dark:border-stone-800 space-y-4 hover-lift reveal-item reveal-up">
+                                <div class="flex text-amber-400 text-xs gap-1">
+                                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                </div>
+                                <p class="text-xs text-stone-600 dark:text-stone-300 italic leading-relaxed">
+                                    "Her book 'Be the Reason You Thrive' is essential reading for any senior leader feeling misaligned. Authentic, practical, and inspiring."
+                                </p>
+                                <div class="pt-2 border-t border-stone-200 dark:border-stone-700">
+                                    <p class="font-bold text-xs text-stone-900 dark:text-white">Executive Director</p>
+                                    <p class="text-[10px] text-stone-500 dark:text-stone-400">Leadership Advisory Board</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive FAQ Accordion Section -->
+                <div class="py-20 border-b border-stone-200/60 dark:border-stone-800">
+                    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+                        <div class="text-center max-w-3xl mx-auto space-y-2 reveal-item reveal-up">
+                            <span class="text-brand-700 dark:text-brand-300 font-semibold uppercase tracking-wider text-xs">Got Questions?</span>
+                            <h2 class="font-serif text-3xl sm:text-4xl font-bold text-stone-900 dark:text-white">Frequently Asked Questions</h2>
+                        </div>
+
+                        <div class="space-y-4">
+                            <!-- FAQ 1 -->
+                            <div class="glass-panel rounded-2xl border border-stone-200 dark:border-stone-800 overflow-hidden faq-item transition hover-lift">
+                                <button onclick="toggleFaq(this)" class="w-full p-5 text-left flex justify-between items-center font-serif font-bold text-sm text-stone-900 dark:text-white focus:outline-none">
+                                    <span>How does the 90-day Choose Direction™ coaching program work?</span>
+                                    <i class="fa-solid fa-chevron-down faq-icon transition-transform text-xs text-brand-600"></i>
+                                </button>
+                                <div class="faq-answer px-5 pb-5 text-xs text-stone-600 dark:text-stone-300 leading-relaxed border-t border-stone-100 dark:border-stone-800 pt-3">
+                                    The 90-day Choose Direction program is a 1-on-1 mentorship trajectory structured in 3 distinct phases: understanding current bottlenecks, defining aligned long-term goals, and building a practical step-by-step action plan for lasting career clarity.
+                                </div>
+                            </div>
+
+                            <!-- FAQ 2 -->
+                            <div class="glass-panel rounded-2xl border border-stone-200 dark:border-stone-800 overflow-hidden faq-item transition hover-lift">
+                                <button onclick="toggleFaq(this)" class="w-full p-5 text-left flex justify-between items-center font-serif font-bold text-sm text-stone-900 dark:text-white focus:outline-none">
+                                    <span>What industries and organisation sizes do you consult for?</span>
+                                    <i class="fa-solid fa-chevron-down faq-icon transition-transform text-xs text-brand-600"></i>
+                                </button>
+                                <div class="faq-answer px-5 pb-5 text-xs text-stone-600 dark:text-stone-300 leading-relaxed border-t border-stone-100 dark:border-stone-800 pt-3">
+                                    Fatima provides Total Rewards and Workforce Consulting for multinational enterprises, fast-growing mid-market companies, and executive leadership teams across tech, finance, healthcare, and global services.
+                                </div>
+                            </div>
+
+                            <!-- FAQ 3 -->
+                            <div class="glass-panel rounded-2xl border border-stone-200 dark:border-stone-800 overflow-hidden faq-item transition hover-lift">
+                                <button onclick="toggleFaq(this)" class="w-full p-5 text-left flex justify-between items-center font-serif font-bold text-sm text-stone-900 dark:text-white focus:outline-none">
+                                    <span>How can I book Fatima for a keynote speaking engagement or workshop?</span>
+                                    <i class="fa-solid fa-chevron-down faq-icon transition-transform text-xs text-brand-600"></i>
+                                </button>
+                                <div class="faq-answer px-5 pb-5 text-xs text-stone-600 dark:text-stone-300 leading-relaxed border-t border-stone-100 dark:border-stone-800 pt-3">
+                                    You can submit an inquiry through the Contact page or click "Book Clarity Call" to discuss keynote topics such as "Navigating Workforce Change", "Vocal Presence in the Boardroom", and "Total Rewards Strategy".
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Care to Voice Positioning Text Section -->
+                <div class="py-20 border-b border-stone-200/60 dark:border-stone-800">
+                    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 glass-panel p-10 rounded-3xl border border-stone-200 dark:border-stone-800 reveal-item reveal-up hover-lift">
+                        <div class="space-y-3">
+                            <h3 class="font-serif font-bold text-xl text-stone-900 dark:text-white">Care to Voice Positioning</h3>
+                            <p class="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
+                                Care to Voice is a career clarity, self-leadership, and consulting platform built around the CARE™ framework, helping professionals and organisations navigate change, strengthen decision-making, and adapt to a rapidly evolving world shaped by AI, workforce transformation, and changing ways of working.
+                            </p>
+                        </div>
+                        <div class="space-y-3">
+                            <h3 class="font-serif font-bold text-xl text-stone-900 dark:text-white">What We Believe</h3>
+                            <p class="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
+                                Career direction is no longer linear. Today's world of work requires self-awareness, adaptability, emotional clarity, and the ability to make intentional decisions in uncertain environments. We believe leadership starts with how you lead yourself, and that organisations perform better when people feel aligned, engaged, and clear about direction.
+                            </p>
+                        </div>
+                        <div class="space-y-3">
+                            <h3 class="font-serif font-bold text-xl text-stone-900 dark:text-white">The Shift We're Creating</h3>
+                            <p class="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
+                                We help professionals move from overthinking to clarity, from external pressure to aligned growth, and from uncertainty to intentional direction. At the organisational level, we support leaders and teams in navigating workforce change, evolving employee expectations, and people-related challenges through more human-centred and adaptable approaches.
+                            </p>
+                        </div>
+                        <div class="space-y-3">
+                            <h3 class="font-serif font-bold text-xl text-stone-900 dark:text-white">Our Promise</h3>
+                            <p class="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
+                                Through practical frameworks, consulting, coaching, workshops, media, and strategic conversations, we help professionals and organisations reconnect with what matters, reduce complexity, strengthen decision-making, and move forward with greater clarity in the modern world.
+                            </p>
+                        </div>
+                        <div class="space-y-3">
+                            <h3 class="font-serif font-bold text-xl text-stone-900 dark:text-white">Our Call to Action</h3>
+                            <p class="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
+                                Whether you are a professional redefining your next step or an organisation navigating workforce change and evolving expectations, Care to Voice is designed to help bring greater clarity, adaptability, and intentional direction in a changing world.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Featured Book & Podcast Section -->
+                <div class="py-20 border-b border-stone-200/60 dark:border-stone-800">
+                    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20">
+                        <!-- Book Feature -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                            <div class="space-y-4 text-center md:text-left reveal-item reveal-left">
+                                <h3 class="font-serif text-3xl text-stone-900 dark:text-white">Featured Book</h3>
+                                <p class="text-sm font-serif italic text-stone-700 dark:text-stone-200">
+                                    If you've ever felt stuck, stretched, or searching—this book hands you the keys to thrive.
+                                </p>
+                                <div class="pt-2">
+                                    <button onclick="navigateTo('publications')" class="bg-brand-700 hover:bg-brand-800 dark:bg-brand-600 text-white text-xs tracking-widest uppercase font-semibold px-6 py-3 rounded-xl transition-all shadow-md btn-shimmer hover-lift">
+                                        GET THE BOOK &gt;
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="flex justify-center reveal-item reveal-right">
+                                <img src="assets/book_cover.jpg" alt="Be The Reason You Thrive Book Cover" onerror="this.src='assets/product_1544716278-ca5e3f4abd8c.jpg'" class="w-64 rounded-2xl shadow-2xl border-4 border-white/80 dark:border-stone-800 glass-panel hover-lift">
+                            </div>
+                        </div>
+
+                        <!-- Podcast Feature -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center pt-8 border-t border-stone-200 dark:border-stone-800">
+                            <div class="flex justify-center order-2 md:order-1 reveal-item reveal-left">
+                                <div class="bg-amber-400 p-6 text-stone-900 w-72 rounded-3xl shadow-xl flex flex-col justify-between aspect-square hover-lift">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <span class="text-[9px] font-bold tracking-widest uppercase bg-stone-900 text-white px-2 py-0.5 rounded-full">Podcast</span>
+                                            <h4 class="font-serif font-bold text-xl mt-2 leading-tight">CARE TO VOICE</h4>
+                                        </div>
+                                        <i class="fa-solid fa-podcast text-2xl"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-serif text-lg font-bold">Career Clarity in a Changing World</p>
+                                        <p class="text-xs text-stone-800 mt-1">Hosted by <span class="font-semibold">Fatima Abreu</span></p>
+                                    </div>
+                                    <div class="bg-stone-900 text-white px-3 py-2 rounded-xl text-xs flex items-center justify-between mt-4 shadow">
+                                        <span class="flex items-center gap-2"><i class="fa-brands fa-spotify text-green-500 text-base"></i> Listen on Spotify</span>
+                                        <i class="fa-solid fa-circle-play"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="space-y-4 text-center md:text-left order-1 md:order-2 reveal-item reveal-right">
+                                <h3 class="font-serif text-3xl text-stone-900 dark:text-white">Listen to the Podcast</h3>
+                                <p class="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
+                                    Conversations on navigating change, making alignment decisions, and shaping your next direction. Wherever you live.
+                                </p>
+                                <div class="pt-2">
+                                    <a href="https://spotify.com" target="_blank" class="inline-block bg-stone-400 hover:bg-stone-500 text-white text-xs tracking-widest uppercase font-semibold px-6 py-3 rounded-xl transition-all shadow-md btn-shimmer hover-lift">
+                                        LISTEN ON SPOTIFY &gt;
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= PAGE: ABOUT ================= -->
+            <section id="about" class="page-section">
+                <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-16">
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+                        <div class="md:col-span-7 space-y-6 reveal-item reveal-left">
+                            <span class="text-xs font-bold uppercase tracking-widest text-brand-700 dark:text-brand-300">About Fatima</span>
+                            <h2 class="font-serif text-3xl sm:text-4xl font-bold text-stone-900 dark:text-white">About Fatima</h2>
+                            <p class="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
+                                I'm Fatima Abreu, Career Clarity Coach, Consultant, Founder of Care to Voice, and Author of Be the Reason You Thrive. With broad global corporate experience, I've partnered with leaders and organisations across Reward, Workforce, and people strategy during periods of growth, change, and evolving workforce expectations.
+                            </p>
+                            <p class="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
+                                Throughout my career, I noticed a recurring pattern: organisations were navigating constant transformation while many professionals — despite appearing successful externally — felt uncertain about their direction, identity, or next step. As AI and changing ways of working continue to reshape careers, that tension is becoming increasingly common.
+                            </p>
+                            <p class="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
+                                That is why I founded Care to Voice — a platform focused on career clarity, self-leadership, and navigating change in a changing world. Through consulting, coaching, workshops, and strategic conversations, I support professionals and organisations in building clearer direction, adaptability, and more human-centred approaches to leadership, workforce strategy, and the future of work.
+                            </p>
+                            <p class="font-script text-3xl text-brand-700 dark:text-brand-300">Fatima Y. Abreu Arellano</p>
+                        </div>
+                        <div class="md:col-span-5 flex justify-center reveal-item reveal-right">
+                            <div class="w-full max-w-sm aspect-[3/4] shadow-2xl rounded-3xl overflow-hidden border-4 border-white/80 dark:border-stone-800 glass-panel hover-lift">
+                                <img src="assets/fatima_portrait.jpg" alt="Fatima Abreu Portrait" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Care to Voice Positioning text in About -->
+                    <div class="glass-panel p-10 rounded-3xl border border-stone-200 dark:border-stone-800 space-y-6 reveal-item reveal-up hover-lift">
+                        <div class="space-y-2">
+                            <h3 class="font-serif font-bold text-lg text-stone-900 dark:text-white">Care to Voice Positioning</h3>
+                            <p class="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">Care to Voice is a career clarity, self-leadership, and consulting platform built around the CARE™ framework, helping professionals and organisations navigate change, strengthen decision-making, and adapt to a rapidly evolving world shaped by AI, workforce transformation, and changing ways of working.</p>
+                        </div>
+                        <div class="space-y-2">
+                            <h3 class="font-serif font-bold text-lg text-stone-900 dark:text-white">What We Believe</h3>
+                            <p class="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">Career direction is no longer linear. Today's world of work requires self-awareness, adaptability, emotional clarity, and the ability to make intentional decisions in uncertain environments. We believe leadership starts with how you lead yourself, and that organisations perform better when people feel aligned, engaged, and clear about direction.</p>
+                        </div>
+                        <div class="space-y-2">
+                            <h3 class="font-serif font-bold text-lg text-stone-900 dark:text-white">The Shift We're Creating</h3>
+                            <p class="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">We help professionals move from overthinking to clarity, from external pressure to aligned growth, and from uncertainty to intentional direction. At the organisational level, we support leaders and teams in navigating workforce change, evolving employee expectations, and people-related challenges through more human-centred and adaptable approaches.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= PAGE: CONSULTING ================= -->
+            <section id="consulting" class="page-section">
+                <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-16">
+                    <!-- Hero Banner -->
+                    <div class="glass-panel p-10 rounded-3xl border border-stone-200 dark:border-stone-800 grid md:grid-cols-12 gap-8 items-center reveal-item reveal-up hover-lift">
+                        <div class="md:col-span-7 space-y-6">
+                            <h1 class="font-serif text-3xl md:text-4xl font-bold text-stone-900 dark:text-white leading-tight">
+                                Consulting that creates value.
+                            </h1>
+                            <p class="text-sm text-stone-600 dark:text-stone-300 leading-relaxed">
+                                Strategic solutions in total rewards and people strategy to help your organisation attract, engage, and grow with purpose.
+                            </p>
+                            <div>
+                                <span class="inline-block bg-white dark:bg-stone-800 text-stone-900 dark:text-white border border-stone-900 dark:border-stone-700 text-xs font-bold uppercase tracking-widest px-6 py-2.5 rounded-xl shadow-sm">
+                                    STRATEGY. PEOPLE. IMPACT.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="md:col-span-5 flex justify-center">
+                            <div class="w-full h-56 rounded-2xl overflow-hidden shadow-xl border-4 border-white/80 dark:border-stone-800 glass-panel">
+                                <img src="assets/product_1497366216548-37526070297c.jpg" alt="Consulting Office Desk" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Services Section -->
+                    <div class="space-y-10 text-center">
+                        <div class="space-y-4">
+                            <h2 class="font-serif text-3xl font-bold text-stone-900 dark:text-white">Our Services</h2>
+                            <a href="https://linkedin.com" target="_blank" class="inline-flex items-center gap-2 bg-[#0077b5] hover:bg-[#005f93] text-white text-xs font-semibold px-6 py-3 rounded-xl shadow-md transition btn-shimmer hover-lift">
+                                <i class="fa-brands fa-linkedin text-base"></i> Visit My LinkedIn Profile &gt;
+                            </a>
+                        </div>
+
+                        <!-- 6 Consulting Service Cards -->
+                        <div class="grid md:grid-cols-3 gap-6 text-left">
+                            <!-- Card 1 -->
+                            <div class="glass-panel p-6 rounded-3xl border border-stone-200 dark:border-stone-800 space-y-4 hover-lift reveal-item reveal-up">
+                                <span class="inline-block bg-stone-400 text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full">REWARD & PAY STRATEGY</span>
+                                <ul class="text-xs text-stone-600 dark:text-stone-300 space-y-2 list-disc list-inside leading-relaxed">
+                                    <li>Reward strategy (Pension, Base, Variable and Equity incentives).</li>
+                                    <li>Remuneration reviews and salary benchmarking.</li>
+                                    <li>Job architecture and workforce framework design.</li>
+                                    <li>Executive and board reporting related to remuneration.</li>
+                                </ul>
+                            </div>
+
+                            <!-- Card 2 -->
+                            <div class="glass-panel p-6 rounded-3xl border border-stone-200 dark:border-stone-800 space-y-4 hover-lift reveal-item reveal-up">
+                                <span class="inline-block bg-brand-olive text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full">EMPLOYEE BENEFITS & WELLBEING</span>
+                                <ul class="text-xs text-stone-600 dark:text-stone-300 space-y-2 list-disc list-inside leading-relaxed">
+                                    <li>Design and review of employee benefits programs.</li>
+                                    <li>Support with brokers, vendors, and benefits providers.</li>
+                                    <li>Wellness and employee engagement initiatives.</li>
+                                    <li>Cost-effective benefits strategies aligned with business goals.</li>
+                                    <li>Support with benefits and pension vendor selection and RFP process implementation.</li>
+                                </ul>
+                            </div>
+
+                            <!-- Card 3 -->
+                            <div class="glass-panel p-6 rounded-3xl border border-stone-200 dark:border-stone-800 space-y-4 hover-lift reveal-item reveal-up">
+                                <span class="inline-block bg-amber-400 text-stone-900 text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full">GLOBAL MOBILITY & WORKFORCE SUPPORT</span>
+                                <ul class="text-xs text-stone-600 dark:text-stone-300 space-y-2 list-disc list-inside leading-relaxed">
+                                    <li>Global mobility policy review and redesign.</li>
+                                    <li>Mobility frameworks for relocations and international transfers.</li>
+                                    <li>Review of mobility operations, governance, and vendor arrangements.</li>
+                                    <li>Global mobility vendor selection and RFP processes.</li>
+                                    <li>Strategic workforce mobility aligned with business growth.</li>
+                                </ul>
+                            </div>
+
+                            <!-- Card 4 -->
+                            <div class="glass-panel p-6 rounded-3xl border border-stone-200 dark:border-stone-800 space-y-4 hover-lift reveal-item reveal-up">
+                                <span class="inline-block bg-stone-400 text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full">GOVERNANCE & ADVISORY</span>
+                                <ul class="text-xs text-stone-600 dark:text-stone-300 space-y-2 list-disc list-inside leading-relaxed">
+                                    <li>Development of policies, frameworks, and reward guidelines.</li>
+                                    <li>Advice on reward governance and compliance processes.</li>
+                                    <li>Support for leadership decision-making and workforce strategies.</li>
+                                    <li>Strategic consulting aligned with organisational goals.</li>
+                                </ul>
+                            </div>
+
+                            <!-- Card 5 -->
+                            <div class="glass-panel p-6 rounded-3xl border border-stone-200 dark:border-stone-800 space-y-4 hover-lift reveal-item reveal-up">
+                                <span class="inline-block bg-brand-olive text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full">HR ANALYTICS & OPTIMISATION</span>
+                                <ul class="text-xs text-stone-600 dark:text-stone-300 space-y-2 list-disc list-inside leading-relaxed">
+                                    <li>Workforce reporting and people data analytics.</li>
+                                    <li>HR systems and process improvement support.</li>
+                                    <li>Identification of efficiencies and operational improvements.</li>
+                                </ul>
+                            </div>
+
+                            <!-- Card 6 -->
+                            <div class="glass-panel p-6 rounded-3xl border border-stone-200 dark:border-stone-800 space-y-4 hover-lift reveal-item reveal-up">
+                                <span class="inline-block bg-amber-400 text-stone-900 text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full">STAKEHOLDER & PROJECT MANAGEMENT</span>
+                                <ul class="text-xs text-stone-600 dark:text-stone-300 space-y-2 list-disc list-inside leading-relaxed">
+                                    <li>End-to-end support for reward and workforce projects.</li>
+                                    <li>Collaboration with leaders and cross-functional teams.</li>
+                                    <li>Communication and education support for employees and managers.</li>
+                                    <li>Facilitation of workshops and engagement sessions.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Call to Action Section -->
+                    <div class="glass-panel p-10 rounded-3xl border border-stone-200 dark:border-stone-800 text-center space-y-6 reveal-item reveal-up hover-lift">
+                        <h2 class="font-serif text-3xl font-bold text-stone-900 dark:text-white">Need support with your people, reward, or workforce strategy?</h2>
+                        <p class="text-sm text-stone-600 dark:text-stone-300 max-w-2xl mx-auto leading-relaxed">
+                            We work with organisations looking to strengthen reward frameworks, optimise workforce practices, and support strategic business decisions.
+                        </p>
+                        <button onclick="navigateTo('contact')" class="bg-stone-500 hover:bg-stone-600 text-white text-xs tracking-widest uppercase font-semibold px-8 py-3.5 rounded-xl shadow-md transition btn-shimmer hover-lift">
+                            Enquire About Consulting &gt;
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= PAGE: COACHING ================= -->
+            <section id="coaching" class="page-section">
+                <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-12">
+                    <div class="text-center max-w-3xl mx-auto space-y-4 reveal-item reveal-up">
+                        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-stone-900 dark:text-white">Welcome to our programs page, where clarity meets action.</h2>
+                        <p class="text-sm text-stone-600 dark:text-stone-300 leading-relaxed">
+                            Explore personalised coaching and structured programs designed to help you gain clarity, define direction, and move forward with confidence in a changing world.
+                        </p>
+                    </div>
+
+                    <!-- Hero Banner Image -->
+                    <div class="rounded-3xl overflow-hidden shadow-2xl border-4 border-white/80 dark:border-stone-800 glass-panel h-80 sm:h-96 reveal-item reveal-up hover-lift">
+                        <img src="assets/product_1506744038136-46273834b3fb.jpg" alt="Serene landscape representing clarity" class="w-full h-full object-cover">
+                    </div>
+
+                    <!-- 3 Action Buttons -->
+                    <div class="flex flex-wrap justify-center gap-4 reveal-item reveal-up">
+                        <button onclick="navigateTo('contact')" class="bg-stone-400 hover:bg-stone-500 text-white text-xs font-bold uppercase tracking-wider px-6 py-3 rounded-xl shadow transition btn-shimmer hover-lift">BOOK SINGLE SESSION &gt;</button>
+                        <button onclick="navigateTo('contact')" class="bg-brand-olive hover:bg-brand-olive-hover text-white text-xs font-bold uppercase tracking-wider px-6 py-3 rounded-xl shadow transition btn-shimmer hover-lift">BOOK PACKAGE &gt;</button>
+                        <button onclick="navigateTo('contact')" class="bg-amber-400 hover:bg-amber-500 text-stone-900 text-xs font-bold uppercase tracking-wider px-6 py-3 rounded-xl shadow transition btn-shimmer hover-lift">EXPLORE CHOOSE DIRECTION &gt;</button>
+                    </div>
+
+                    <!-- 3 Program Cards -->
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <div class="glass-panel p-6 rounded-3xl border border-amber-100 dark:border-stone-800 space-y-4 hover-lift reveal-item reveal-up">
+                            <h3 class="font-serif font-bold text-xl text-stone-900 dark:text-white">Single Coaching Session</h3>
+                            <p class="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">A one-on-one coaching session designed to help you navigate career decisions, professional challenges, leadership growth, and change with greater clarity and confidence.</p>
+                        </div>
+
+                        <div class="glass-panel p-6 rounded-3xl border border-amber-200 dark:border-stone-800 space-y-4 hover-lift reveal-item reveal-up">
+                            <h3 class="font-serif font-bold text-xl text-stone-900 dark:text-white">Package Coaching Sessions (3-Sessions)</h3>
+                            <p class="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">This package of three one-on-one coaching sessions gives you ongoing support as you tackle career transitions, challenges, or growth goals.</p>
+                        </div>
+
+                        <div class="glass-panel p-6 rounded-3xl border border-amber-100 dark:border-stone-800 space-y-4 hover-lift reveal-item reveal-up">
+                            <h3 class="font-serif font-bold text-xl text-stone-900 dark:text-white">Choose Direction</h3>
+                            <p class="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">A structured career clarity program designed to help you better understand yourself, define a direction that fits your reality, and move forward with greater confidence in a changing world.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= PAGE: PUBLICATIONS ================= -->
+            <section id="publications" class="page-section">
+                <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-16">
+                    <div class="glass-panel p-10 rounded-3xl border border-stone-200 dark:border-stone-800 grid md:grid-cols-12 gap-12 items-center reveal-item reveal-up hover-lift">
+                        <div class="md:col-span-5 flex justify-center">
+                            <img src="assets/book_cover.jpg" alt="Be The Reason You Thrive Book Cover" onerror="this.src='assets/product_1544716278-ca5e3f4abd8c.jpg'" class="w-64 rounded-2xl shadow-2xl border-4 border-white/80 dark:border-stone-800 glass-panel">
+                        </div>
+
+                        <div class="md:col-span-7 space-y-6">
+                            <h2 class="font-serif text-3xl font-bold text-stone-900 dark:text-white">8 Skills You'll Walk Away With</h2>
+                            <ol class="space-y-3 text-xs text-stone-700 dark:text-stone-200 font-medium">
+                                <li class="flex items-start gap-3"><span class="w-6 h-6 rounded-full bg-stone-400 text-white flex items-center justify-center text-xs shrink-0 font-bold">1</span> Understand What's Driving Your Internal Tension</li>
+                                <li class="flex items-start gap-3"><span class="w-6 h-6 rounded-full bg-stone-400 text-white flex items-center justify-center text-xs shrink-0 font-bold">2</span> Strengthen Your Inner Voice in a Noisy World</li>
+                                <li class="flex items-start gap-3"><span class="w-6 h-6 rounded-full bg-stone-400 text-white flex items-center justify-center text-xs shrink-0 font-bold">3</span> Navigate Uncertainty with Greater Emotional Clarity</li>
+                                <li class="flex items-start gap-3"><span class="w-6 h-6 rounded-full bg-stone-400 text-white flex items-center justify-center text-xs shrink-0 font-bold">4</span> Make More Intentional Decisions About Work and Life</li>
+                                <li class="flex items-start gap-3"><span class="w-6 h-6 rounded-full bg-stone-400 text-white flex items-center justify-center text-xs shrink-0 font-bold">5</span> Redefine Success Beyond External Expectations</li>
+                                <li class="flex items-start gap-3"><span class="w-6 h-6 rounded-full bg-stone-400 text-white flex items-center justify-center text-xs shrink-0 font-bold">6</span> Adapt to Change Without Losing Yourself</li>
+                                <li class="flex items-start gap-3"><span class="w-6 h-6 rounded-full bg-stone-400 text-white flex items-center justify-center text-xs shrink-0 font-bold">7</span> Navigate Reinvention with Greater Confidence</li>
+                                <li class="flex items-start gap-3"><span class="w-6 h-6 rounded-full bg-stone-400 text-white flex items-center justify-center text-xs shrink-0 font-bold">8</span> Create a More Balanced and Intentional Life</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <!-- Get your copy today Section -->
+                    <div class="text-center space-y-6 glass-panel p-10 rounded-3xl border border-stone-200 dark:border-stone-800 reveal-item reveal-up hover-lift">
+                        <h2 class="font-serif text-3xl font-bold text-stone-900 dark:text-white">Get your copy today.</h2>
+                        <div class="flex justify-center gap-4">
+                            <a href="https://amazon.com" target="_blank" class="bg-brand-700 hover:bg-brand-800 text-white text-xs font-bold uppercase tracking-wider px-8 py-3.5 rounded-xl shadow transition btn-shimmer hover-lift">AMAZON &gt;</a>
+                            <button onclick="navigateTo('shop')" class="bg-white dark:bg-stone-800 text-stone-900 dark:text-white border border-stone-300 dark:border-stone-700 text-xs font-bold uppercase tracking-wider px-8 py-3.5 rounded-xl shadow transition btn-shimmer hover-lift">DIRECT &gt;</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= PAGE: SHOP ================= -->
+            <section id="shop" class="page-section">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-10">
+                    <div class="text-center max-w-3xl mx-auto space-y-2 reveal-item reveal-up">
+                        <span class="text-brand-700 dark:text-brand-300 font-semibold uppercase tracking-wider text-xs">Curated Merchandise & Tools</span>
+                        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-stone-900 dark:text-white">Care to Voice Store</h2>
+                        <p class="text-stone-600 dark:text-stone-300 text-xs">Explore official apparel, tote bags, art prints, and executive books with real product imagery.</p>
+                    </div>
+
+                                        <!-- Filter & Search Controls -->
+                    <div class="flex flex-col md:flex-row gap-4 items-center justify-between mb-8">
+                        <div class="flex flex-wrap justify-center gap-2">
+                            <button onclick="filterCategory('all')" class="cat-filter-btn px-4 py-2 rounded-full text-xs font-semibold bg-brand-700 text-white shadow" data-cat="all">All Products (26)</button>
+                            <button onclick="filterCategory('tshirts')" class="cat-filter-btn px-4 py-2 rounded-full text-xs font-semibold glass-panel text-stone-700 dark:text-stone-200 border border-stone-200 dark:border-stone-700" data-cat="tshirts">T-Shirts & Tops</button>
+                            <button onclick="filterCategory('hoodies')" class="cat-filter-btn px-4 py-2 rounded-full text-xs font-semibold glass-panel text-stone-700 dark:text-stone-200 border border-stone-200 dark:border-stone-700" data-cat="hoodies">Hoodies & Sweaters</button>
+                            <button onclick="filterCategory('bags')" class="cat-filter-btn px-4 py-2 rounded-full text-xs font-semibold glass-panel text-stone-700 dark:text-stone-200 border border-stone-200 dark:border-stone-700" data-cat="bags">Bags & Totes</button>
+                            <button onclick="filterCategory('prints')" class="cat-filter-btn px-4 py-2 rounded-full text-xs font-semibold glass-panel text-stone-700 dark:text-stone-200 border border-stone-200 dark:border-stone-700" data-cat="prints">Art & Posters</button>
+                        </div>
+
+                        <div class="relative w-full md:w-64">
+                            <input type="text" id="shop-search" oninput="handleSearch()" placeholder="Search store items..." class="w-full pl-9 pr-4 py-2 text-xs rounded-full glass-panel border border-stone-200 dark:border-stone-700 text-stone-800 dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-2.5 text-xs text-stone-400"></i>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Shop Grid -->
+                    <div id="products-grid" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+                </div>
+            </section>
+
+            <!-- ================= PAGE: CONTACT ================= -->
+            <section id="contact" class="page-section">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-12">
+                    <div class="text-center max-w-3xl mx-auto space-y-2 reveal-item reveal-up">
+                        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-stone-900 dark:text-white">Let's connect.</h2>
+                        <p class="text-sm font-serif italic text-stone-700 dark:text-stone-200">
+                            For coaching, consulting, workshops, keynote, podcast discussions, or media enquiries.
+                        </p>
+                        <p class="text-xs text-stone-600 dark:text-stone-300 italic">Let's explore how we can work together.</p>
+                    </div>
+
+                    <div class="grid lg:grid-cols-12 gap-12 items-start">
+                        <div class="lg:col-span-5 space-y-6 reveal-item reveal-left">
+                            <div class="w-full aspect-[4/5] rounded-3xl shadow-xl overflow-hidden border-4 border-white/80 dark:border-stone-800 glass-panel hover-lift">
+                                <img src="assets/fatima_portrait.jpg" alt="Fatima Contact Photo" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+
+                        <div class="lg:col-span-7 glass-panel p-8 rounded-3xl border border-stone-200 dark:border-stone-800 reveal-item reveal-right">
+                            <h3 class="font-script text-3xl text-emerald-800 dark:text-emerald-400 mb-6">Get in touch</h3>
+
+                            <form id="contact-form" onsubmit="handleContactSubmit(event)" class="space-y-4 text-xs">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block font-semibold text-stone-700 dark:text-stone-300 mb-1">First name *</label>
+                                        <input type="text" required class="w-full px-4 py-3 rounded-xl border border-stone-200 dark:border-stone-700 bg-white/80 dark:bg-stone-800 text-stone-800 dark:text-stone-100 focus:ring-2 focus:ring-brand-500 focus:outline-none" placeholder="First Name">
+                                    </div>
+                                    <div>
+                                        <label class="block font-semibold text-stone-700 dark:text-stone-300 mb-1">Last name</label>
+                                        <input type="text" class="w-full px-4 py-3 rounded-xl border border-stone-200 dark:border-stone-700 bg-white/80 dark:bg-stone-800 text-stone-800 dark:text-stone-100 focus:ring-2 focus:ring-brand-500 focus:outline-none" placeholder="Last Name">
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block font-semibold text-stone-700 dark:text-stone-300 mb-1">Email *</label>
+                                        <input type="email" required class="w-full px-4 py-3 rounded-xl border border-stone-200 dark:border-stone-700 bg-white/80 dark:bg-stone-800 text-stone-800 dark:text-stone-100 focus:ring-2 focus:ring-brand-500 focus:outline-none" placeholder="Email">
+                                    </div>
+                                    <div>
+                                        <label class="block font-semibold text-stone-700 dark:text-stone-300 mb-1">Phone</label>
+                                        <input type="tel" class="w-full px-4 py-3 rounded-xl border border-stone-200 dark:border-stone-700 bg-white/80 dark:bg-stone-800 text-stone-800 dark:text-stone-100 focus:ring-2 focus:ring-brand-500 focus:outline-none" placeholder="Phone">
+                                    </div>
+                                </div>
+
+                                <div class="space-y-2 pt-2">
+                                    <label class="block font-semibold text-stone-700 dark:text-stone-300">Enquiry Type *</label>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-stone-700 dark:text-stone-300">
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="enquiry" value="Coaching" class="rounded text-emerald-700"> Coaching</label>
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="enquiry" value="Total Rewards Consulting" class="rounded text-emerald-700"> Total Rewards Consulting</label>
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="enquiry" value="Workshops" class="rounded text-emerald-700"> Workshops</label>
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="enquiry" value="Keynote Speaking" class="rounded text-emerald-700"> Keynote Speaking</label>
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="enquiry" value="Podcast Collaboration" class="rounded text-emerald-700"> Podcast Collaboration</label>
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="enquiry" value="Media Enquiry" class="rounded text-emerald-700"> Media Enquiry</label>
+                                        <label class="flex items-center gap-2"><input type="checkbox" name="enquiry" value="Other" class="rounded text-emerald-700"> Other</label>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block font-semibold text-stone-700 dark:text-stone-300 mb-1">Write a message</label>
+                                    <textarea rows="4" class="w-full px-4 py-3 rounded-xl border border-stone-200 dark:border-stone-700 bg-white/80 dark:bg-stone-800 text-stone-800 dark:text-stone-100 focus:ring-2 focus:ring-brand-500 focus:outline-none" placeholder="Write a message..."></textarea>
+                                </div>
+
+                                <button type="submit" class="w-full bg-emerald-800 hover:bg-emerald-900 text-white font-semibold py-3.5 rounded-xl shadow-lg transition btn-shimmer">
+                                    Submit &gt;
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- FOOTER WITH 6-COLUMN ORIGINAL GRID LAYOUT -->
+        <footer class="glass-panel text-stone-700 dark:text-stone-300 py-16 border-t border-stone-200/60 dark:border-stone-800 relative z-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-8 text-xs">
+                    <!-- Signature / Logo Column -->
+                    <div class="col-span-2 space-y-3">
+                        <p class="font-script text-3xl text-stone-900 dark:text-brand-300">Fatima Y. Abreu Arellano</p>
+                        <p class="text-[11px] text-stone-500 dark:text-stone-400 leading-relaxed">
+                            Voice. Lead. Thrive.<br>Executive Advisory, Career Clarity & Workforce Strategy.
+                        </p>
+                    </div>
+
+                    <!-- Column 1: TOPICS -->
+                    <div class="space-y-2">
+                        <p class="font-bold uppercase tracking-wider text-stone-900 dark:text-white text-[10px]">TOPICS</p>
+                        <ul class="space-y-1 text-stone-600 dark:text-stone-400 text-[11px]">
+                            <li><a href="#" onclick="navigateTo('home'); return false;" class="hover:underline">Emotional Clarity</a></li>
+                            <li><a href="#" onclick="navigateTo('home'); return false;" class="hover:underline">Inner Balance</a></li>
+                            <li><a href="#" onclick="navigateTo('home'); return false;" class="hover:underline">Enabling Leadership</a></li>
+                            <li><a href="#" onclick="navigateTo('home'); return false;" class="hover:underline">Professional Growth</a></li>
+                            <li><a href="#" onclick="navigateTo('home'); return false;" class="hover:underline">Reinvention</a></li>
+                            <li><a href="#" onclick="navigateTo('home'); return false;" class="hover:underline">Resilience</a></li>
+                            <li><a href="#" onclick="navigateTo('home'); return false;" class="hover:underline">Self-Confidence</a></li>
+                            <li><a href="#" onclick="navigateTo('home'); return false;" class="hover:underline">Wellbeing & Purpose</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Column 2: ABOUT -->
+                    <div class="space-y-2">
+                        <p class="font-bold uppercase tracking-wider text-stone-900 dark:text-white text-[10px]">ABOUT</p>
+                        <ul class="space-y-1 text-stone-600 dark:text-stone-400 text-[11px]">
+                            <li><a href="#" onclick="navigateTo('about'); return false;" class="hover:underline">About Fatima</a></li>
+                            <li><a href="#" onclick="navigateTo('about'); return false;" class="hover:underline">Care to Voice</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Column 3: BOOK & SHOP -->
+                    <div class="space-y-4">
+                        <div class="space-y-2">
+                            <p class="font-bold uppercase tracking-wider text-stone-900 dark:text-white text-[10px]">BOOK</p>
+                            <ul class="space-y-1 text-stone-600 dark:text-stone-400 text-[11px]">
+                                <li><a href="#" onclick="navigateTo('publications'); return false;" class="hover:underline">Be the Reason You Thrive</a></li>
+                            </ul>
+                        </div>
+                        <div class="space-y-2">
+                            <p class="font-bold uppercase tracking-wider text-stone-900 dark:text-white text-[10px]">SHOP</p>
+                            <ul class="space-y-1 text-stone-600 dark:text-stone-400 text-[11px]">
+                                <li><a href="#" onclick="navigateTo('shop'); return false;" class="hover:underline">Our Products</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Column 4: CONSULTING & PROGRAMS -->
+                    <div class="space-y-4">
+                        <div class="space-y-2">
+                            <p class="font-bold uppercase tracking-wider text-stone-900 dark:text-white text-[10px]">CONSULTING</p>
+                            <ul class="space-y-1 text-stone-600 dark:text-stone-400 text-[11px]">
+                                <li><a href="#" onclick="navigateTo('consulting'); return false;" class="hover:underline">Total Rewards & Workforce</a></li>
+                            </ul>
+                        </div>
+                        <div class="space-y-2">
+                            <p class="font-bold uppercase tracking-wider text-stone-900 dark:text-white text-[10px]">PROGRAMS</p>
+                            <ul class="space-y-1 text-stone-600 dark:text-stone-400 text-[11px]">
+                                <li><a href="#" onclick="navigateTo('coaching'); return false;" class="hover:underline">Coaching Sessions</a></li>
+                                <li><a href="#" onclick="navigateTo('coaching'); return false;" class="hover:underline">Choose Direction</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Column 5: MEDIA -->
+                    <div class="space-y-2">
+                        <p class="font-bold uppercase tracking-wider text-stone-900 dark:text-white text-[10px]">MEDIA</p>
+                        <ul class="space-y-1 text-stone-600 dark:text-stone-400 text-[11px]">
+                            <li><a href="https://spotify.com" target="_blank" class="hover:underline">Care to Voice Podcast (Spotify)</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Bottom Footer Bar -->
+                <div class="pt-8 border-t border-stone-200/60 dark:border-stone-800 flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] text-stone-500 dark:text-stone-400">
+                    <p>&copy; <span id="current-year"></span> Care To Voice. All rights reserved.</p>
+                    <div class="flex items-center space-x-4">
+                        <a href="https://instagram.com" target="_blank" class="hover:text-brand-700 transition" aria-label="Instagram"><i class="fa-brands fa-instagram text-base"></i></a>
+                        <a href="https://facebook.com" target="_blank" class="hover:text-brand-700 transition" aria-label="Facebook"><i class="fa-brands fa-facebook-f text-base"></i></a>
+                        <a href="https://linkedin.com" target="_blank" class="hover:text-brand-700 transition" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in text-base"></i></a>
+                        <a href="https://youtube.com" target="_blank" class="hover:text-brand-700 transition" aria-label="YouTube"><i class="fa-brands fa-youtube text-base"></i></a>
+                        <div class="flex items-center space-x-3 text-[10px] text-stone-600 dark:text-stone-400 underline">
+                            <a href="#" onclick="showToast('Privacy Policy'); return false;">Privacy</a>
+                            <a href="#" onclick="showToast('Disclaimer'); return false;">Disclaimer</a>
+                            <a href="#" onclick="showToast('Terms of Use'); return false;">Terms of Use</a>
+                            <a href="#" onclick="showToast('Fraud Warning'); return false;">Fraud Warning</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- PRODUCT DETAIL MODAL -->
+    <div id="product-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="glass-panel w-full max-w-md rounded-3xl p-6 shadow-2xl relative border border-stone-200 dark:border-stone-800">
+            <button onclick="closeProductModal()" class="absolute top-4 right-4 text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 text-xl focus:outline-none">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div id="product-modal-content"></div>
+        </div>
+    </div>
+
+    <!-- SHOPPING CART DRAWER -->
+    <div id="cart-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex justify-end opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="glass-panel w-full max-w-md h-full shadow-2xl p-6 flex flex-col justify-between border-l border-stone-200 dark:border-stone-800">
+            <div>
+                <div class="flex justify-between items-center pb-4 border-b border-stone-200 dark:border-stone-800">
+                    <h3 class="font-serif text-xl font-bold text-stone-900 dark:text-white">Shopping Cart</h3>
+                    <button onclick="closeCartModal()" class="text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 text-xl focus:outline-none">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div id="cart-items" class="py-4 divide-y divide-stone-100 dark:divide-stone-800 max-h-[65vh] overflow-y-auto text-xs"></div>
+            </div>
+            <div class="pt-4 border-t border-stone-200 dark:border-stone-800 space-y-4">
+                <div class="flex justify-between font-bold text-base text-stone-900 dark:text-white">
+                    <span>Total:</span>
+                    <span id="cart-total">$0.00</span>
+                </div>
+                <button onclick="checkoutCart()" class="w-full bg-brand-700 hover:bg-brand-800 dark:bg-brand-600 text-white font-semibold py-3.5 rounded-xl shadow transition btn-shimmer">
+                    Complete Checkout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-stone-900 dark:bg-stone-800 text-white px-5 py-3.5 rounded-2xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center space-x-3 border border-stone-700">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-green-400"></i>
+        <span id="toast-message" class="text-xs sm:text-sm font-medium">Notification message</span>
+    </div>
+
+    <!-- SCRIPT ENGINE -->
+    <script>
+        document.getElementById('current-year').innerText = new Date().getFullYear();
+
+                /* COMPLETE ORGANIZED PRODUCTS DATABASE (31 ITEMS) */
+        const products = [
+            // T-Shirts & Tops
+            { id: 1, name: "CARE Puzzle Female Relaxed Fit T-Shirt", category: "tshirts", price: 34.99, img: "assets/product_1521572267360-ee0c2909d518.jpg", desc: "Premium relaxed fit t-shirt featuring CARE puzzle branding." },
+            { id: 2, name: "Confusion & Clarity Fitted T-Shirt", category: "tshirts", price: 32.99, img: "assets/product_1503342217505-b0a15ec3261c.jpg", desc: "Soft cotton fitted t-shirt with signature clarity typography." },
+            { id: 3, name: "Enabler Fitted V-Neck T-Shirt", category: "tshirts", price: 34.99, img: "assets/product_1529139574466-a303027c1d8b.jpg", desc: "Elegant V-neck top with Enabler mindset branding." },
+            { id: 4, name: "The Dodecahedron Relaxed Fit T-Shirt", category: "tshirts", price: 34.99, img: "assets/product_1583743814966-8936f5b7be1a.jpg", desc: "Minimalist geometry print relaxed fit t-shirt." },
+            { id: 5, name: "Confusion & Clarity Boxy T-Shirt", category: "tshirts", price: 34.99, img: "assets/product_1503342394128-c104d54dba01.jpg", desc: "Modern boxy fit t-shirt with graphic print." },
+            { id: 6, name: "The Dodecahedron Boxy T-Shirt", category: "tshirts", price: 34.99, img: "assets/product_1521572267360-ee0c2909d518.jpg", desc: "Heavyweight boxy fit graphic t-shirt." },
+            { id: 7, name: "CARE Puzzle Female Racerback Tank Top", category: "tshirts", price: 29.99, img: "assets/product_1503342217505-b0a15ec3261c.jpg", desc: "Athletic racerback tank top for summer and activewear." },
+            { id: 8, name: "The Dodecahedron Racerback Tank Top", category: "tshirts", price: 29.99, img: "assets/product_1529139574466-a303027c1d8b.jpg", desc: "Lightweight racerback tank top." },
+            { id: 9, name: "Confusion & Clarity Racerback Tank Top", category: "tshirts", price: 29.99, img: "assets/product_1583743814966-8936f5b7be1a.jpg", desc: "Comfortable active tank top." },
+            { id: 10, name: "Confusion & Clarity Baseball 3/4 Sleeve T-Shirt", category: "tshirts", price: 36.99, img: "assets/product_1618354691373-d851c5c3a990.jpg", desc: "Classic two-tone 3/4 sleeve raglan t-shirt." },
+            { id: 11, name: "CARE Puzzle Male Oversized T-Shirt", category: "tshirts", price: 36.99, img: "assets/product_1503342217505-b0a15ec3261c.jpg", desc: "Relaxed oversized unisex t-shirt." },
+            { id: 12, name: "The Dodecahedron Active T-Shirt", category: "tshirts", price: 34.99, img: "assets/product_1521572267360-ee0c2909d518.jpg", desc: "Performance active t-shirt for daily movement." },
+
+            // Hoodies & Sweaters
+            { id: 13, name: "CARE Puzzle Female Pullover Hoodie", category: "hoodies", price: 54.99, img: "assets/product_1556905055-8f358a7a47b2.jpg", desc: "Cozy fleece pullover hoodie with front pocket." },
+            { id: 14, name: "Confusion & Clarity Zipped Hoodie", category: "hoodies", price: 59.99, img: "assets/product_1509967419530-da38b4704bc6.jpg", desc: "Full zip hoodie designed for comfort and clarity." },
+            { id: 15, name: "The Dodecahedron Premium Oversized Hoodie", category: "hoodies", price: 64.99, img: "assets/product_1556905055-8f358a7a47b2.jpg", desc: "Heavyweight organic cotton oversized hoodie." },
+
+            // Bags & Totes
+            { id: 16, name: "Confusion & Clarity Backpack", category: "bags", price: 49.99, img: "assets/product_1553062407-98eeb64c6a62.jpg", desc: "Durable daily backpack for laptop and executive essentials." },
+            { id: 17, name: "CARE Puzzle Female Backpack", category: "bags", price: 49.99, img: "assets/product_1553062407-98eeb64c6a62.jpg", desc: "Sleek travel and office backpack." },
+            { id: 18, name: "The Dodecahedron Tote Bag", category: "bags", price: 24.99, img: "assets/product_1544816155-12df9643f363.jpg", desc: "Eco-friendly canvas tote bag with graphic print." },
+            { id: 19, name: "CARE Puzzle Female Tote Bag", category: "bags", price: 24.99, img: "assets/product_1544816155-12df9643f363.jpg", desc: "Heavy duty cotton tote bag for everyday carry." },
+            { id: 20, name: "Enabler Tote Bag", category: "bags", price: 24.99, img: "assets/product_1544816155-12df9643f363.jpg", desc: "Versatile tote bag with Enabler typography." },
+            { id: 21, name: "Confusion & Clarity Tote Bag", category: "bags", price: 24.99, img: "assets/product_1544816155-12df9643f363.jpg", desc: "Minimalist black print canvas tote bag." },
+
+            // Art Prints & Wall Posters
+            { id: 22, name: "CARE Puzzle Art Print", category: "prints", price: 29.99, img: "assets/product_1579783900882-c0d3dad7b119.jpg", desc: "High quality gallery art print for home or office." },
+            { id: 23, name: "Be The Reason You Thrive Art", category: "prints", price: 29.99, img: "assets/product_1578301978693-85fa9c0320b9.jpg", desc: "Inspirational wall art poster print." },
+            { id: 24, name: "Enablers Build Momentum Poster", category: "prints", price: 27.99, img: "assets/product_1582562124811-c09040d0a901.jpg", desc: "Modern typography poster print." },
+            { id: 25, name: "Confusion And Clarity Art", category: "prints", price: 29.99, img: "assets/product_1541701494587-cb58502866ab.jpg", desc: "Abstract art print representing clarity." },
+            { id: 26, name: "The Dodecahedron Art", category: "prints", price: 29.99, img: "assets/product_1513519245088-0e12902e5a38.jpg", desc: "Framed geometric poster art." }
+        ];
+
+        let cart = [];
+        let activeCategory = 'all';
+
+        // NAVIGATION LOGIC
+        function navigateTo(pageId) {
+            document.querySelectorAll('.page-section').forEach(sec => {
+                sec.classList.remove('active');
+            });
+            const target = document.getElementById(pageId);
+            if(target) target.classList.add('active');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                if(btn.getAttribute('data-target') === pageId) {
+                    btn.classList.add('bg-stone-900', 'text-white', 'dark:bg-stone-100', 'dark:text-stone-900', 'font-bold');
+                } else {
+                    btn.classList.remove('bg-stone-900', 'text-white', 'dark:bg-stone-100', 'dark:text-stone-900', 'font-bold');
+                }
+            });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(() => { initScrollObserver(); }, 50);
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        // DARK / LIGHT THEME LOGIC
+        function initTheme() {
+            const saved = localStorage.getItem('theme');
+            if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                updateThemeIcon(true);
+            } else {
+                document.documentElement.classList.remove('dark');
+                updateThemeIcon(false);
+            }
+        }
+
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateThemeIcon(isDark);
+        }
+
+        function updateThemeIcon(isDark) {
+            const icon = document.getElementById('theme-toggle-icon');
+            if (isDark) {
+                icon.className = "fa-solid fa-sun text-lg text-amber-300";
+            } else {
+                icon.className = "fa-solid fa-moon text-lg text-stone-800";
+            }
+        }
+
+        // STORE PRODUCTS RENDERING
+        function renderProducts(items) {
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = '';
+
+            if (items.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-12 text-stone-500 font-medium text-sm">No products match your search.</div>`;
+                return;
+            }
+
+            items.forEach(prod => {
+                const card = document.createElement('div');
+                card.className = "glass-panel p-4 text-center rounded-2xl border border-stone-200 dark:border-stone-800 flex flex-col justify-between items-center hover-lift reveal-item reveal-up revealed";
+                card.innerHTML = `
+                    <div class="w-full aspect-[3/4] bg-stone-100 dark:bg-stone-800 mb-4 overflow-hidden rounded-xl relative flex items-center justify-center">
+                        <img src="${prod.img}" alt="${prod.name}" class="w-full h-full object-cover">
+                        <span class="absolute top-2 right-2 bg-stone-900/80 text-white text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border border-stone-700">${prod.category}</span>
+                    </div>
+                    <h4 class="font-bold text-xs text-stone-900 dark:text-white my-2 min-h-[32px] flex items-center justify-center">${prod.name}</h4>
+                    <p class="text-[10px] text-stone-500 dark:text-stone-400 mb-3">$${prod.price.toFixed(2)}</p>
+                    <div class="flex gap-2 w-full">
+                        <button onclick="openProductModal(${prod.id})" class="flex-1 glass-panel hover:bg-stone-900 hover:text-white text-stone-800 dark:text-stone-200 border border-stone-300 dark:border-stone-700 font-bold text-[10px] uppercase tracking-wider py-2 rounded-xl transition">Details</button>
+                        <button onclick="addToCart(${prod.id})" class="flex-1 bg-brand-700 hover:bg-brand-800 dark:bg-brand-600 text-white font-bold text-[10px] uppercase tracking-wider py-2 rounded-xl transition btn-shimmer">Add</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterCategory(cat) {
+            activeCategory = cat;
+            document.querySelectorAll('.cat-filter-btn').forEach(btn => {
+                if(btn.getAttribute('data-cat') === cat) {
+                    btn.className = "cat-filter-btn px-4 py-2 rounded-full text-xs font-semibold bg-brand-700 text-white shadow";
+                } else {
+                    btn.className = "cat-filter-btn px-4 py-2 rounded-full text-xs font-semibold glass-panel text-stone-700 dark:text-stone-200 border border-stone-200 dark:border-stone-700";
+                }
+            });
+            applyFilters();
+        }
+
+        function handleSearch() { applyFilters(); }
+
+        function applyFilters() {
+            const query = document.getElementById('shop-search').value.toLowerCase();
+            const filtered = products.filter(p => {
+                const matchesCat = (activeCategory === 'all' || p.category === activeCategory);
+                const matchesQuery = p.name.toLowerCase().includes(query) || p.desc.toLowerCase().includes(query);
+                return matchesCat && matchesQuery;
+            });
+            renderProducts(filtered);
+            initScrollObserver();
+        }
+
+        // MODAL LOGIC
+        function openProductModal(id) {
+            const prod = products.find(p => p.id === id);
+            if(!prod) return;
+            
+            const content = document.getElementById('product-modal-content');
+            content.innerHTML = `
+                <div class="rounded-2xl overflow-hidden mb-4 h-48">
+                    <img src="${prod.img}" alt="${prod.name}" class="w-full h-full object-cover">
+                </div>
+                <h3 class="font-serif text-xl font-bold text-stone-900 dark:text-white mb-1">${prod.name}</h3>
+                <p class="text-xs text-stone-600 dark:text-stone-300 mb-4 leading-relaxed">${prod.desc}</p>
+                <div class="flex items-center justify-between pt-4 border-t border-stone-200 dark:border-stone-800">
+                    <span class="text-xl font-bold text-stone-900 dark:text-white">$${prod.price.toFixed(2)}</span>
+                    <button onclick="addToCart(${prod.id}); closeProductModal();" class="bg-brand-700 hover:bg-brand-800 dark:bg-brand-600 text-white text-xs font-semibold px-5 py-2.5 rounded-xl shadow btn-shimmer">
+                        Add to Cart
+                    </button>
+                </div>
+            `;
+            document.getElementById('product-modal').classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        function closeProductModal() {
+            document.getElementById('product-modal').classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        // CART LOGIC
+        function addToCart(id) {
+            const item = products.find(p => p.id === id);
+            if(item) {
+                cart.push(item);
+                updateCart();
+                showToast(`Added "${item.name}" to cart!`);
+            }
+        }
+
+        function removeFromCart(idx) {
+            cart.splice(idx, 1);
+            updateCart();
+        }
+
+        function updateCart() {
+            const badge = document.getElementById('cart-badge');
+            badge.innerText = cart.length;
+            if(cart.length > 0) badge.classList.remove('hidden');
+            else badge.classList.add('hidden');
+
+            const container = document.getElementById('cart-items');
+            container.innerHTML = '';
+            let total = 0;
+
+            if(cart.length === 0) {
+                container.innerHTML = `<p class="text-stone-400 text-center py-8 text-xs">Your cart is currently empty.</p>`;
+            } else {
+                cart.forEach((item, index) => {
+                    total += item.price;
+                    const row = document.createElement('div');
+                    row.className = "py-3 flex justify-between items-center";
+                    row.innerHTML = `
+                        <div>
+                            <p class="font-bold text-xs text-stone-900 dark:text-white">${item.name}</p>
+                            <p class="text-[10px] text-stone-500 dark:text-stone-400">$${item.price.toFixed(2)}</p>
+                        </div>
+                        <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-700 text-xs font-semibold">Remove</button>
+                    `;
+                    container.appendChild(row);
+                });
+            }
+
+            document.getElementById('cart-total').innerText = `$${total.toFixed(2)}`;
+        }
+
+        function openCartModal() { document.getElementById('cart-modal').classList.remove('opacity-0', 'pointer-events-none'); }
+        function closeCartModal() { document.getElementById('cart-modal').classList.add('opacity-0', 'pointer-events-none'); }
+
+        function checkoutCart() {
+            if(cart.length === 0) { showToast("Your cart is empty!", "error"); return; }
+            cart = [];
+            updateCart();
+            closeCartModal();
+            showToast("Order inquiry placed successfully!");
+        }
+
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            showToast("Thank you! Your message has been received.");
+            document.getElementById('contact-form').reset();
+        }
+
+        function showToast(msg, type = "success") {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toast-icon');
+            document.getElementById('toast-message').innerText = msg;
+
+            if(type === 'error') {
+                icon.className = "fa-solid fa-circle-exclamation text-red-400";
+            } else {
+                icon.className = "fa-solid fa-circle-check text-green-400";
+            }
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        /* CONTINUOUS INTERACTIVE BLACK & WHITE FLOATING BUBBLE LIVE WALLPAPER ENGINE */
+        const canvas = document.getElementById('bubble-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let bubbles = [];
+        let mouse = { x: null, y: null, radius: 160 };
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        window.addEventListener('mouseleave', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            initBubbles();
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+        class Bubble {
+            constructor() {
+                this.init();
+            }
+
+            init() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.radius = Math.random() * 26 + 6;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = -Math.random() * 0.7 - 0.25;
+                this.alpha = Math.random() * 0.4 + 0.12;
+                this.pulseSpeed = Math.random() * 0.02 + 0.005;
+                this.angle = Math.random() * Math.PI * 2;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.angle += this.pulseSpeed;
+                this.x += Math.sin(this.angle) * 0.35;
+
+                if (this.y + this.radius < 0) {
+                    this.y = height + this.radius;
+                    this.x = Math.random() * width;
+                }
+                if (this.x - this.radius > width) this.x = -this.radius;
+                if (this.x + this.radius < 0) this.x = width + this.radius;
+
+                if (mouse.x !== null && mouse.y !== null) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < mouse.radius) {
+                        let force = (mouse.radius - dist) / mouse.radius;
+                        let angle = Math.atan2(dy, dx);
+                        this.x -= Math.cos(angle) * force * 3.5;
+                        this.y -= Math.sin(angle) * force * 3.5;
+                    }
+                }
+            }
+
+            draw(isDark) {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+
+                if (isDark) {
+                    ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha * 0.32})`;
+                    ctx.strokeStyle = `rgba(255, 255, 255, ${this.alpha * 0.55})`;
+                } else {
+                    ctx.fillStyle = `rgba(30, 30, 35, ${this.alpha * 0.16})`;
+                    ctx.strokeStyle = `rgba(30, 30, 35, ${this.alpha * 0.35})`;
+                }
+
+                ctx.lineWidth = 1.5;
+                ctx.fill();
+                ctx.stroke();
+
+                // Inner highlight ring
+                ctx.beginPath();
+                ctx.arc(this.x - this.radius * 0.3, this.y - this.radius * 0.3, this.radius * 0.25, 0, Math.PI * 2);
+                if (isDark) {
+                    ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha * 0.45})`;
+                } else {
+                    ctx.fillStyle = `rgba(0, 0, 0, ${this.alpha * 0.22})`;
+                }
+                ctx.fill();
+            }
+        }
+
+        function initBubbles() {
+            bubbles = [];
+            const count = Math.floor((width * height) / 17000);
+            for (let i = 0; i < count; i++) {
+                bubbles.push(new Bubble());
+            }
+        }
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, width, height);
+            const isDark = document.documentElement.classList.contains('dark');
+
+            bubbles.forEach(b => {
+                b.update();
+                b.draw(isDark);
+            });
+
+            requestAnimationFrame(animateCanvas);
+        }
+
+        // SCROLL PROGRESS BAR
+        window.addEventListener('scroll', () => {
+            const bar = document.getElementById('scroll-progress-bar');
+            if (!bar) return;
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            bar.style.width = scrollPercent + '%';
+        });
+
+        // SCROLL REVEAL OBSERVER
+        let scrollObserver;
+        function initScrollObserver() {
+            if (scrollObserver) scrollObserver.disconnect();
+            const options = { root: null, rootMargin: '0px 0px -30px 0px', threshold: 0.05 };
+
+            scrollObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                    }
+                });
+            }, options);
+
+            document.querySelectorAll('.reveal-item').forEach(el => scrollObserver.observe(el));
+        }
+
+        
+        // ================= HERO TYPING TEXT EFFECT =================
+        const typingPhrases = [
+            "Executive Advisory",
+            "Career Direction",
+            "Total Rewards Strategy",
+            "Workforce Alignment",
+            "Vocal Authority"
+        ];
+        let phraseIdx = 0;
+        let charIdx = 0;
+        let isDeleting = false;
+
+        function typeHeroEffect() {
+            const el = document.getElementById('hero-typing');
+            if (!el) return;
+            const currentPhrase = typingPhrases[phraseIdx];
+
+            if (isDeleting) {
+                el.innerText = currentPhrase.substring(0, charIdx - 1);
+                charIdx--;
+            } else {
+                el.innerText = currentPhrase.substring(0, charIdx + 1);
+                charIdx++;
+            }
+
+            let typeSpeed = isDeleting ? 40 : 80;
+
+            if (!isDeleting && charIdx === currentPhrase.length) {
+                typeSpeed = 1800; // Pause at end of word
+                isDeleting = true;
+            } else if (isDeleting && charIdx === 0) {
+                isDeleting = false;
+                phraseIdx = (phraseIdx + 1) % typingPhrases.length;
+                typeSpeed = 400;
+            }
+
+            setTimeout(typeHeroEffect, typeSpeed);
+        }
+
+        // ================= COUNTER ANIMATION =================
+        let countersAnimated = false;
+        function animateCounters() {
+            if (countersAnimated) return;
+            const counters = document.querySelectorAll('.counter');
+            let anyInView = false;
+
+            counters.forEach(counter => {
+                const rect = counter.getBoundingClientRect();
+                if (rect.top < window.innerHeight && rect.bottom >= 0) {
+                    anyInView = true;
+                    const target = +counter.getAttribute('data-target');
+                    let count = 0;
+                    const speed = target / 30;
+
+                    const updateCount = () => {
+                        count += speed;
+                        if (count < target) {
+                            counter.innerText = Math.ceil(count);
+                            setTimeout(updateCount, 40);
+                        } else {
+                            counter.innerText = target;
+                        }
+                    };
+                    updateCount();
+                }
+            });
+
+            if (anyInView) countersAnimated = true;
+        }
+
+        window.addEventListener('scroll', animateCounters);
+
+        // ================= BACK TO TOP BUTTON OBSERVER =================
+        window.addEventListener('scroll', () => {
+            const btt = document.getElementById('back-to-top');
+            if (!btt) return;
+            if (window.scrollY > 400) {
+                btt.classList.add('show');
+            } else {
+                btt.classList.remove('show');
+            }
+        });
+
+        // ================= FAQ ACCORDION TOGGLE =================
+        function toggleFaq(btn) {
+            const item = btn.parentElement;
+            const isOpen = item.classList.contains('open');
+
+            document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+
+            if (!isOpen) {
+                item.classList.add('open');
+            }
+        }
+
+        window.onload = function() {
+            typeHeroEffect();
+            initTheme();
+            resizeCanvas();
+            renderProducts(products);
+            animateCanvas();
+            initScrollObserver();
+        }
+    </script>
+
+    <!-- FLOATING BACK TO TOP & QUICK CALL BUTTONS -->
+    <div id="back-to-top" class="flex flex-col gap-2">
+        <button onclick="navigateTo('contact')" class="p-3 rounded-full bg-brand-700 hover:bg-brand-800 text-white shadow-2xl flex items-center gap-2 text-xs font-bold transition hover-lift pulse-dot" title="Book Clarity Call">
+            <i class="fa-solid fa-phone"></i>
+            <span class="hidden sm:inline">Book Call</span>
+        </button>
+        <button onclick="window.scrollTo({top:0, behavior:'smooth'})" class="p-3 rounded-full bg-stone-900 dark:bg-stone-800 text-white border border-stone-700 shadow-2xl transition hover-lift text-xs" title="Back to Top">
+            <i class="fa-solid fa-arrow-up"></i>
+        </button>
+    </div>
+
+</body>
+</html>
